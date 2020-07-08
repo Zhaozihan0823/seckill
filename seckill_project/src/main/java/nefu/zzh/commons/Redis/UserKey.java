@@ -6,8 +6,8 @@ public class UserKey extends BasePrefix {
         super(prefix);
     }
 
-//    public static UserKey getById = new UserKey("id");
-//    public static UserKey getByName = new UserKey("name");
+    public static UserKey getById = new UserKey("id");
+    public static UserKey getByName = new UserKey("name");
 
 
 }
