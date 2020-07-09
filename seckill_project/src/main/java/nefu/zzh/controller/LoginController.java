@@ -11,10 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 
 @Controller
+@RequestMapping("/login")
 public class LoginController {
 
     @Autowired
@@ -29,10 +31,9 @@ public class LoginController {
 
     @RequestMapping("/doLogin")
     @ResponseBody
-    public Result<Boolean> doLogin(@Valid LoginVo loginVo){
-        log.info(loginVo.toString());
-
-        secKillUserService.login(loginVo);
+    public Result<Boolean> doLogin(HttpServletResponse response, @Valid LoginVo loginVo){
+        //log.info(loginVo.toString());
+        secKillUserService.login(response, loginVo);
 
         return Result.success(true);
     }
