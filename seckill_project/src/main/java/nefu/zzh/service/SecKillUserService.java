@@ -6,7 +6,7 @@ import nefu.zzh.commons.Result.CodeMessage;
 import nefu.zzh.commons.Util.MD5Util;
 import nefu.zzh.commons.Util.UUIDUtil;
 import nefu.zzh.commons.exception.GlobalException;
-import nefu.zzh.dao.SecKillDao;
+import nefu.zzh.dao.SecKillUserDao;
 import nefu.zzh.vo.LoginVo;
 import nefu.zzh.vo.SecKillUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,12 @@ public class SecKillUserService {
     public static final String COOKIE_NAME_TOKEN = "token";
 
     @Autowired
-    SecKillDao secKillDao;
+    SecKillUserDao secKillUserDao;
     @Autowired
     RedisUtil redisUtil;
 
     public SecKillUser getById(long id){
-        return secKillDao.getById(id);
+        return secKillUserDao.getById(id);
     }
 
     public boolean login(HttpServletResponse httpServletResponse, LoginVo loginVo) {
@@ -48,14 +48,14 @@ public class SecKillUserService {
         if(!DBPass.equals(dbPassword)){
             throw new GlobalException(CodeMessage.PASSWORD_ERROR);
         }
-        addCookie(httpServletResponse, user);
+        String token = UUIDUtil.uuid();
+        addCookie(httpServletResponse, token, user);
 
         return true;
     }
 
-    private void addCookie(HttpServletResponse response, SecKillUser user){
+    private void addCookie(HttpServletResponse response, String token, SecKillUser user){
         //生成cookie
-        String token = UUIDUtil.uuid();
         redisUtil.set(SecKillUserKey.token, token, user);
         Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
         cookie.setMaxAge(SecKillUserKey.token.expireSeconds());
@@ -70,7 +70,7 @@ public class SecKillUserService {
         SecKillUser user = redisUtil.get(SecKillUserKey.token, token, SecKillUser.class);
         //延长有效期
         if (user != null){
-            addCookie(response, user);
+            addCookie(response, token, user);
         }
 
         return user;

@@ -22,6 +22,9 @@ public class CodeMessage {
     //订单模块 5004XX
 
     //秒杀模块 5005XX
+    public static CodeMessage  seckill_over= new CodeMessage(500500, "商品库存不足");
+    public static CodeMessage  seckill_repeat= new CodeMessage(500501, "不能重复秒杀");
+
 
     private CodeMessage(Integer code, String message) {
         this.code = code;
