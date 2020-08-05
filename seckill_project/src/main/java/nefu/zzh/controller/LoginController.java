@@ -31,11 +31,12 @@ public class LoginController {
 
     @RequestMapping("/doLogin")
     @ResponseBody
-    public Result<Boolean> doLogin(HttpServletResponse response, @Valid LoginVo loginVo){
+    public Result<String> doLogin(HttpServletResponse response, @Valid LoginVo loginVo){
         //log.info(loginVo.toString());
-        secKillUserService.login(response, loginVo);
+//        secKillUserService.login(response, loginVo);
+        String token = secKillUserService.login(response, loginVo);
 
-        return Result.success(true);
+        return Result.success(token);
     }
 
 }

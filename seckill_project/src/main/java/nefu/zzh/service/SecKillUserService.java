@@ -27,10 +27,38 @@ public class SecKillUserService {
     RedisUtil redisUtil;
 
     public SecKillUser getById(long id){
-        return secKillUserDao.getById(id);
+        //取缓存
+        SecKillUser user = redisUtil.get(SecKillUserKey.getById, ""+id, SecKillUser.class);
+        if (user != null){
+            return user;
+        }
+        user = secKillUserDao.getById(id);
+        if (user != null){
+            redisUtil.set(SecKillUserKey.getById,""+id, user);
+        }
+        return user;
+//        return secKillUserDao.getById(id);
     }
 
-    public boolean login(HttpServletResponse httpServletResponse, LoginVo loginVo) {
+    public boolean updatePassword(String token, long id, String frompassword){
+        //取user
+        SecKillUser user = getById(id);
+        if (user == null){
+            throw new GlobalException(CodeMessage.MOBILE_NOT_EXIT);
+        }
+        //更新数据库
+        SecKillUser toBeUpdate = new SecKillUser();
+        toBeUpdate.setId(id);
+        toBeUpdate.setPassword(MD5Util.formPassToDBPass(frompassword, user.getSalt()));
+        secKillUserDao.update(toBeUpdate);
+        //处理所有涉及到的缓存,根据token和id查找的缓存都需要更新
+        redisUtil.delete(SecKillUserKey.getById, ""+id);
+        user.setPassword(toBeUpdate.getPassword());
+        redisUtil.set(SecKillUserKey.token, token, user);
+        return true;
+    }
+
+    public String login(HttpServletResponse httpServletResponse, LoginVo loginVo) {
         if (loginVo == null){
             throw new GlobalException(CodeMessage.SERVER_ERROR);
         }
@@ -51,7 +79,7 @@ public class SecKillUserService {
         String token = UUIDUtil.uuid();
         addCookie(httpServletResponse, token, user);
 
-        return true;
+        return token;
     }
 
     private void addCookie(HttpServletResponse response, String token, SecKillUser user){

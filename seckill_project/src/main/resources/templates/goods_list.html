@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>商品列表</title>
-    <script th:src="@{../webjars/jquery/3.5.1/jquery.js}"></script>
+    <script th:src="@{/webjars/jquery/3.5.1/jquery.js}"></script>
     <!-- jquery -->
-    <script type="text/javascript" th:src="@{../js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
     <!-- bootstrap -->
-    <link rel="stylesheet" type="text/css" th:href="@{../bootstrap/css/bootstrap.min.css}" />
-    <script type="text/javascript" th:src="@{../bootstrap/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+    <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
     <!-- jquery-validator -->
-    <script type="text/javascript" th:src="@{../jquery-validation/jquery.validate.min.js}"></script>
-    <script type="text/javascript" th:src="@{../jquery-validation/localization/messages_zh.min.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery-validation/jquery.validate.min.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery-validation/localization/messages_zh.min.js}"></script>
     <!-- layer -->
-    <script type="text/javascript" th:src="@{../layer/layer.js}"></script>
+    <script type="text/javascript" th:src="@{/layer/layer.js}"></script>
     <!-- md5.js -->
-    <script type="text/javascript" th:src="@{../js/md5.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/md5.min.js}"></script>
     <!-- common.js -->
-    <script type="text/javascript" th:src="@{../js/common.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
 </head>
 <body>
 <div class="panel panel-default">
@@ -30,7 +30,7 @@
             <td th:text="${goods.goodsPrice}"></td>
             <td th:text="${goods.seckillPrice}"></td>
             <td th:text="${goods.stockCount}"></td>
-            <td><a th:href="'/goods/toDetail/'+${goods.id}">详情</a></td>
+            <td><a th:href="'/goods_detail.htm?goodsId='+${goods.id}">详情</a></td>
         </tr>
     </table>
 </div>

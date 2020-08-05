@@ -77,6 +77,26 @@ public class RedisUtil {
     }
 
     /**
+     * 删除缓存，更新数据
+     * @param prefix
+     * @param key
+     * @param <T>
+     * @return
+     */
+    public <T> boolean delete(KeyPrefix prefix, String key){
+        Jedis jedis = null;
+        try{
+            jedis = RedisPoolUtil.getPool().getResource();
+            //生成真正的key值
+            String realKey = prefix.getPrefix() + key;
+            long ret = jedis.del(key);
+            return ret > 0;
+        }finally {
+            returnToPool(jedis);
+        }
+    }
+
+    /**
      * 对应key的value值+1
      * @param prefix
      * @param key
