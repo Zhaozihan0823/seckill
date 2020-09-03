@@ -3,6 +3,7 @@ package nefu.zzh.controller;
 import nefu.zzh.commons.Redis.RedisUtil;
 import nefu.zzh.commons.Redis.UserKey;
 import nefu.zzh.commons.Result.Result;
+import nefu.zzh.rabbitmq.MQSender;
 import nefu.zzh.service.UserService;
 import nefu.zzh.vo.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,22 @@ public class SampleController {
     @Autowired
     RedisUtil redisUtil;
 
+    @Autowired
+    MQSender mqSender;
+
     @RequestMapping("/thymeleaf")
     public String thymeleaf(Model model){
         model.addAttribute("name", "jack");
         return "hello";
     }
+
+//    @RequestMapping("/mq")
+//    @ResponseBody
+//    public Result<String> rabbit(){
+//        mqSender.sendHeader("hello rabbitmq header");
+//        return Result.success("hello rabbitmq");
+//    }
+
 
     @RequestMapping("/db/tx")
     @ResponseBody

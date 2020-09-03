@@ -122,7 +122,6 @@ public class GoodsController {
         return html;
     }
 
-
     @RequestMapping(value = "/toDetailTow/{goodsId}")
     @ResponseBody
     public Result<GoodsDetailVo> detailTow(Model model, SecKillUser user, HttpServletResponse response,

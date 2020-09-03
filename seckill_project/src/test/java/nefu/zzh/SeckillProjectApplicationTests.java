@@ -18,7 +18,7 @@ class SeckillProjectApplicationTests {
     @Test
     public void encryptPwd() {
         //加密方法
-        System.out.println(stringEncryptor.encrypt(""));
+        System.out.println(stringEncryptor.encrypt("/user"));
     }
 
 

@@ -3,6 +3,11 @@ package nefu.zzh.commons.Redis;
 import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.ScanParams;
+import redis.clients.jedis.ScanResult;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class RedisUtil {
@@ -89,10 +94,58 @@ public class RedisUtil {
             jedis = RedisPoolUtil.getPool().getResource();
             //生成真正的key值
             String realKey = prefix.getPrefix() + key;
-            long ret = jedis.del(key);
+            long ret = jedis.del(realKey);
             return ret > 0;
         }finally {
             returnToPool(jedis);
+        }
+    }
+
+    public boolean delete(KeyPrefix prefix){
+        if (prefix == null){
+            return false;
+        }
+        List<String> keys = scanKeys(prefix.getPrefix());
+        if (keys == null || keys.size() <= 0){
+            return true;
+        }
+        Jedis jedis = null;
+        try {
+            jedis = RedisPoolUtil.getPool().getResource();
+            jedis.del(keys.toArray(new String [0]));
+            return true;
+        }catch (final Exception e){
+            e.printStackTrace();
+            return false;
+        }finally {
+            if (jedis != null){
+                jedis.close();
+            }
+        }
+    }
+
+    private List<String> scanKeys(String prefix) {
+        Jedis jedis = null;
+        try {
+            jedis = RedisPoolUtil.getPool().getResource();
+            List<String> keys = new ArrayList<String>();
+            String cursor = "0";
+            ScanParams scanParams = new ScanParams();
+            scanParams.match("*" + prefix + "*");
+            scanParams.count(100);
+            do{
+                ScanResult<String> scanResult = jedis.scan(cursor, scanParams);
+                List<String> result = scanResult.getResult();
+                if (result != null && result.size() > 0){
+                    keys.addAll(result);
+                }
+                cursor = scanResult.getCursor();
+            }while (!cursor.equals("0"));
+            return keys;
+        }finally {
+            if (jedis != null){
+                jedis.close();
+            }
         }
     }
 
@@ -132,7 +185,7 @@ public class RedisUtil {
         }
     }
 
-    private <T> String beanToString(T value) {
+    public static  <T> String beanToString(T value) {
         if (value == null){
             return null;
         }
@@ -148,7 +201,7 @@ public class RedisUtil {
         }
     }
 
-    private <T> T stringToBean(String str, Class clazz) {
+    public static  <T> T stringToBean(String str, Class clazz) {
         if (str == null || str.length() <= 0 || clazz == null){
             return null;
         }

@@ -20,10 +20,11 @@ public class CodeMessage {
     //商品模块 5003XX
 
     //订单模块 5004XX
+    public static CodeMessage ORDER_NOT_EXIST = new CodeMessage(500400, "订单不存在");
 
     //秒杀模块 5005XX
-    public static CodeMessage  seckill_over= new CodeMessage(500500, "商品库存不足");
-    public static CodeMessage  seckill_repeat= new CodeMessage(500501, "不能重复秒杀");
+    public static CodeMessage  SECKILL_OVER= new CodeMessage(500500, "商品库存不足");
+    public static CodeMessage  SECKILL_REPEAT= new CodeMessage(500501, "不能重复秒杀");
 
 
     private CodeMessage(Integer code, String message) {

@@ -17,4 +17,14 @@ public interface OrderDao {
 
     @Insert("insert into seckill_order (user_id, goods_id, order_id)values(#{userId}, #{goodsId}, #{orderId})")
     public void insertSecKillOrder(SecKillOrder secKillOrder);
+
+    @Select("select * from order_info where id = #{orderId}")
+    public OrderInfo getOrderById(long orderId);
+
+    @Delete("delete from order_info")
+    public void deleteSeckillOrders();
+
+    @Delete("delete from seckill_order")
+    public void deleteOrders();
+
 }
