@@ -1,6 +1,7 @@
 package nefu.zzh.config;
 
 
+import nefu.zzh.commons.access.UserContext;
 import nefu.zzh.service.SecKillUserService;
 import nefu.zzh.vo.SecKillUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,18 +30,19 @@ public class UserArguementResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
-        HttpServletRequest request = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
-        HttpServletResponse response = nativeWebRequest.getNativeResponse(HttpServletResponse.class);
+    public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer,
+                                  NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
+//        HttpServletRequest request = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
+//        HttpServletResponse response = nativeWebRequest.getNativeResponse(HttpServletResponse.class);
+//
+//        String paramToken = request.getParameter(SecKillUserService.COOKIE_NAME_TOKEN);
+//        String cookieToken = getCookieValue(request, SecKillUserService.COOKIE_NAME_TOKEN);
+//        if (StringUtils.isEmpty(cookieToken) && StringUtils.isEmpty(paramToken)){
+//            return null;
+//        }
+//        String token = StringUtils.isEmpty(paramToken)?cookieToken : paramToken;
 
-        String paramToken = request.getParameter(SecKillUserService.COOKIE_NAME_TOKEN);
-        String cookieToken = getCookieValue(request, SecKillUserService.COOKIE_NAME_TOKEN);
-        if (StringUtils.isEmpty(cookieToken) && StringUtils.isEmpty(paramToken)){
-            return null;
-        }
-        String token = StringUtils.isEmpty(paramToken)?cookieToken : paramToken;
-
-        return secKillUserService.getByToken(response, token);
+        return UserContext.getUser();
     }
 
     private String getCookieValue(HttpServletRequest request, String cookieNameToken) {
